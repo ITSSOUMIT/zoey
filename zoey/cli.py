@@ -1,7 +1,7 @@
 from .scopes.projects import project
 from .scopes.pages import page
 from .scopes.groups import group, groups
-from .scopes.business import generate
+from .scopes.generators import site
 import click
 
 
@@ -10,7 +10,6 @@ import click
 def main():
     pass
 
-main.add_command(generate)
 main.add_command(groups)
 
 
@@ -22,6 +21,14 @@ def new():
 new.add_command(project)
 new.add_command(page)
 new.add_command(group)
+
+
+# zoey generate [command]
+@main.group()
+def generate():
+    pass
+
+generate.add_command(site)
 
 
 # zoey
