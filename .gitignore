@@ -1,0 +1,4 @@
+build/
+dist/
+zoey.egg-info/
+.DS_Store
