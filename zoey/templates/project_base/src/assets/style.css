@@ -5,8 +5,8 @@
     --bez-ease: cubic-bezier(0.82, 0, 0.12, 1);
     --t-link-hover: 0.2s;
 
-    --c-azure: rgb(111, 146, 186);
-    --c-azure-light: rgba(111, 146, 186, 0.56);
+    --c-azure: rgb(54, 189, 247);
+    --c-azure-light: rgba(54, 189, 247, 0.56);
     --c-gray: #777;
     --c-bg-gray: #f7f7f7;
 
@@ -327,18 +327,30 @@ footer {
 }
 
 #tags span {
-    color: var(--c-azure);
     text-decoration: none;
-}
-
-#tags span:hover {
-    text-decoration: underline;
+    display: inline-block;
+    padding: 5px;
+    margin: 2px;
+    background-color: #f9f9f9;
+    border: 1px solid #ccc;
+    border-radius: 4px;
 }
 
 /**
  * footer
  */
 footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px;
+}
+
+.footer-left{
+    text-align: left;
+}
+
+.footer-right{
     text-align: right;
 }
 

@@ -66,6 +66,29 @@ def get_relative_path(file_path, target):
     return os.path.relpath(target, os.path.dirname(file_path)).replace('\\', '/')
 
 
+def generate_header_links(current_file_path):
+    src_directory = Path('src')
+    links_html = ""
+
+    for item in src_directory.iterdir():
+        if item.name == 'assets':
+            continue
+        if item.is_file() and item.suffix.lower() == '.md' and item.name != 'index.md':
+            # Generate link for the markdown file
+            public_other_file = Path('public') / item.with_suffix('.html').name
+            link_text = item.stem
+            relative_link = get_relative_path(current_file_path, public_other_file)
+            links_html += f"<a href='{relative_link}'>/{link_text}</a> "
+
+        elif item.is_dir():
+            # Generate link for the folder's index.html
+            public_folder_index_file = Path('public') / item.name /f"{item.name}-index.html"
+            relative_folder_link = get_relative_path(current_file_path, public_folder_index_file)
+            links_html += f"<a href='{relative_folder_link}'>/{item.name}</a> "
+
+    return links_html
+
+
 def convert_markdown_to_html(src_file, public_file):
     with open(src_file, 'r') as file:
         markdown_content = file.read()
@@ -81,6 +104,8 @@ def convert_markdown_to_html(src_file, public_file):
   """ + ' '.join([f"<span>{tag}</span>" for tag in tags]) + """
 </div>
 """
+    src_directory = Path('src')
+    links_html = generate_header_links(public_file)
     relative_css_path = get_relative_path(public_file, os.path.join('public', 'assets', 'style.css'))
     relative_home_path = get_relative_path(public_file, os.path.join('public', 'index.html'))
     
@@ -100,6 +125,7 @@ def convert_markdown_to_html(src_file, public_file):
 <nav>
   <div>
     <a id="nav-home" href="{relative_home_path}" class='active'><svg id="nav-home-dot" width="12" height="12" xmlns="http://www.w3.org/2000/svg"><circle cx="6" cy="6" r="6" /></svg></a>
+    {links_html}
   </div>
 </nav>
 </header>
@@ -124,7 +150,9 @@ def create_index_file(folder_path, public_folder_path):
             index_content += f"<li><a href='{link_path}'>{link_name}</a><span class='date'>{last_modified}</span></li>\n"
     index_content += "</ul>"
 
+    src_directory = Path('src')
     index_file_path = public_folder_path / f"{folder_path.name}-index.html"
+    links_html = generate_header_links(index_file_path)
     relative_css_path = get_relative_path(index_file_path, os.path.join('public', 'assets', 'style.css'))
     relative_home_path = get_relative_path(index_file_path, os.path.join('public', 'index.html'))
     with open(index_file_path, 'w') as file:
@@ -143,6 +171,7 @@ def create_index_file(folder_path, public_folder_path):
 <nav>
   <div>
     <a id="nav-home" href="{relative_home_path}" class='active'><svg id="nav-home-dot" width="12" height="12" xmlns="http://www.w3.org/2000/svg"><circle cx="6" cy="6" r="6" /></svg></a>
+    {links_html}
   </div>
 </nav>
 </header>
@@ -175,8 +204,71 @@ def traverse_and_convert():
                 shutil.copy(src_file, public_file)
 
 
+def insert_footer():
+    config_path = Path('config.py')
+    spec = importlib.util.spec_from_file_location("config", config_path)
+    config = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(config)
+
+    # Extract footer information from the config
+    footer_text = getattr(config, 'footer_text', '')
+    social_mail = getattr(config, 'social_mail', '')
+    social_linkedin = getattr(config, 'social_linkedin', '')
+    social_github = getattr(config, 'social_github', '')
+    social_instagram = getattr(config, 'social_instagram', '')
+    social_twitter = getattr(config, 'social_twitter', '')
+    social_facebook = getattr(config, 'social_facebook', '')
+
+    # Social media icons
+    social_icons = {
+        'mail': ('fa-solid fa-envelope', social_mail),
+        'linkedin': ('fa-brands fa-linkedin', social_linkedin),
+        'github': ('fa-brands fa-github', social_github),
+        'instagram': ('fa-brands fa-instagram', social_instagram),
+        'twitter': ('fa-brands fa-twitter', social_twitter),
+        'facebook': ('fa-brands fa-facebook', social_facebook),
+    }
+
+    # Create footer-left based on available social links
+    footer_left = ''
+    for social, class_link in social_icons.items():
+        if class_link[1]:
+            footer_left += f'<a href="{class_link[1]}" target="_blank"><i class="{class_link[0]}" style="color: #777;"></i></a>\n'
+
+    # Construct footer-right only if footer_text is not empty
+    footer_right = f'<div class="footer-right">{footer_text}</div>' if footer_text else ''
+    footer_content = f"""
+<footer>
+  <div class="footer-left">
+    {footer_left.strip()}
+  </div>
+  {footer_right}
+</footer>
+    """
+    public_directory = Path('public')
+    for html_file in public_directory.glob('**/*.html'):
+        with open(html_file, 'r') as file:
+            content = file.read()
+
+        # Skip files that don't need a footer (optional, depending on your structure)
+        if '</body>' not in content:
+            continue
+
+        # Insert footer before the closing </body> tag
+        new_content = re.sub(r'(</body>)', f'{footer_content}\\1', content)
+        with open(html_file, 'w') as file:
+            file.write(new_content)
+
+
+def is_zoey_workspace():
+    return Path('src').exists() and Path('config.py').exists()
+
+
 @click.command()
 def site():
+    if not is_zoey_workspace():
+        click.echo(click.style('The current directory is not a Zoey workspace', fg='red'))
+        return
     public_directory = Path('public')
     click.echo(click.style('Generating an optimized build...', fg='blue'))
     click.echo(click.style('Emptying the public directory...', fg='red'))
@@ -185,4 +277,5 @@ def site():
     update_css_colors()
     click.echo(click.style('Converting source files to HTML...', fg='blue'))
     traverse_and_convert()
+    insert_footer()
     click.echo(click.style(f'Your site is generated successfully inside {public_directory} directory', fg='green'))

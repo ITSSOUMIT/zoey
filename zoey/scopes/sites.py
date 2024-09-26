@@ -6,7 +6,7 @@ import pkg_resources
 
 @click.command()
 @click.argument('name')
-def project(name):
+def site(name):
     try:
         template_path = Path(pkg_resources.resource_filename('zoey', 'templates/project_base'))
         project_path = Path(name)

@@ -1,7 +1,7 @@
-from .scopes.projects import project
+from .scopes.sites import site
 from .scopes.pages import page
 from .scopes.groups import group, groups
-from .scopes.generators import site
+from .scopes.generators import site as generate_site
 import click
 
 
@@ -18,7 +18,7 @@ main.add_command(groups)
 def new():
     pass
 
-new.add_command(project)
+new.add_command(site)
 new.add_command(page)
 new.add_command(group)
 
@@ -28,7 +28,7 @@ new.add_command(group)
 def generate():
     pass
 
-generate.add_command(site)
+generate.add_command(generate_site)
 
 
 # zoey
