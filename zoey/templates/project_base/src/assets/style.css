@@ -324,16 +324,14 @@ footer {
     margin-left: auto;
     margin-right: auto;
     margin-top: 4rem;
-
-    text-align: right;
 }
 
-#tags a {
+#tags span {
     color: var(--c-azure);
     text-decoration: none;
 }
 
-#tags a:hover {
+#tags span:hover {
     text-decoration: underline;
 }
 
