@@ -5,19 +5,19 @@ Say hello to **zoey**, a command line based Static Site Generator !
 **zoey** is based on [Python](https://www.python.org/), and works on any Python installation above `v3.6.x`
 
 #### Contents
-1. [Installation](#installation)
-2. [Getting Started](#getting_started)
-3. [Core Concepts](#core_concepts)
-4. [Usage](#usage)
+- [Installation](#installation)
+- [Getting Started](#getting-started)
+- [Core concepts](#core-concepts)
+- [Usage](#usage)
 
-#### Installation {#installation}
+#### Installation
 1. Install Python for your OS from <a href="https://www.python.org/downloads/" target="_blank">here</a>
 1.1. Ensure that **Add Python to PATH** checkbox during installation is **checked**.
 2. Open a command line of your choice, type `pip install zoey` and press enter ⏎
 
 Voila, thats it ! **zoey** is installed and ready to go.
 
-#### Getting Started {#getting_started}
+#### Getting Started
 To create a new site, in your command line of choice, type
 `zoey new site <site-name>`
 This command generates a folder named `<site-name>`, with the following structure -
@@ -37,13 +37,13 @@ Folder structure explanation -
 2. `/src` - This is the folder where you will be writing all the pages for your site in markdown `.md` format.
 3. `/public` - This is the folder, which will have the final html files, which you can directly copy and add to any hosting service of choice. The contents of this folder will be auto generated when the generator is run.
 
-#### Core concepts {#core_concepts}
+#### Core concepts
 1. Always make changes in the src directory only. **No direct changes to be made to the public directory.**
 2. group - A group is basically a folder inside src, which groups some pages together.
 3. page - A page is an individual markdown file, that will be converted to a HTML page.
 4. All multimedia files should be placed inside the `src/assets/media` folder only, and then suitably linkedin inside the markdown files.
 
-#### Usage {#usage}
+#### Usage
 1. To create a new page -
    ```bash
    zoey new page <page-name>
