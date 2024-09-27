@@ -1,1 +1,2 @@
-include zoey/templates/*
+recursive-include zoey/templates *
+graft zoey/templates
