@@ -12,8 +12,8 @@ Say hello to **zoey**, a command line based Static Site Generator !
 
 #### Installation
 1. Install Python for your OS from <a href="https://www.python.org/downloads/" target="_blank">here</a>
-1.1. Ensure that **Add Python to PATH** checkbox during installation is **checked**.
-2. Open a command line of your choice, type `pip install zoey` and press enter ⏎
+2. Ensure that **Add Python to PATH** checkbox during installation is **checked**.
+3. Open a command line of your choice, type `pip install zoey` and press enter ⏎
 
 Voila, thats it ! **zoey** is installed and ready to go.
 
