@@ -5,6 +5,8 @@ color_code = {
     "blue": 247,
 }
 
+color_mode = "light"  # light or dark
+
 # Footer Text (shown on botton right of the page)
 footer_text = "Built using <a href='https://github.com/ITSSOUMIT/zoey'>Zoey</a>"
 

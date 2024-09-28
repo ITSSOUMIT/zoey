@@ -17,6 +17,14 @@ def clear_public_directory():
         public_directory.mkdir()
 
 
+def site_color_mode():
+    config_path = Path('config.py')
+    spec = importlib.util.spec_from_file_location("config", config_path)
+    config = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(config)
+    return getattr(config, 'color_mode', 'light')
+
+
 def update_css_colors():
     config_path = Path('config.py')
     spec = importlib.util.spec_from_file_location("config", config_path)
@@ -106,7 +114,7 @@ def convert_markdown_to_html(src_file, public_file):
 """
     src_directory = Path('src')
     links_html = generate_header_links(public_file)
-    relative_css_path = get_relative_path(public_file, os.path.join('public', 'assets', 'style.css'))
+    relative_css_path = get_relative_path(public_file, os.path.join('public', 'assets', 'style.css')) if site_color_mode() == 'light' else get_relative_path(public_file, os.path.join('public', 'assets', 'style-dark.css'))
     relative_home_path = get_relative_path(public_file, os.path.join('public', 'index.html'))
     
     with open(public_file, 'w') as file:
@@ -153,7 +161,7 @@ def create_index_file(folder_path, public_folder_path):
     src_directory = Path('src')
     index_file_path = public_folder_path / f"{folder_path.name}-index.html"
     links_html = generate_header_links(index_file_path)
-    relative_css_path = get_relative_path(index_file_path, os.path.join('public', 'assets', 'style.css'))
+    relative_css_path = get_relative_path(index_file_path, os.path.join('public', 'assets', 'style.css')) if site_color_mode() == 'light' else get_relative_path(index_file_path, os.path.join('public', 'assets', 'style-dark.css'))
     relative_home_path = get_relative_path(index_file_path, os.path.join('public', 'index.html'))
     with open(index_file_path, 'w') as file:
         file.write(f"""
